@@ -88,16 +88,18 @@ func TestOrganizationService(t *testing.T) {
 	client := NewESIMGoClient("test-api-key")
 	client.SetBaseURL(server.URL)
 
-	org, err := client.Organization.GetDetails(context.Background())
+	orgs, err := client.Organization.GetDetails(context.Background())
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
 	}
 
-	if org.Name != "Test Organization" {
-		t.Errorf("Expected name 'Test Organization', got '%s'", org.Name)
-	}
+	for _, org := range orgs.Organizations {
+		if org.Name != "Test Organization" {
+			t.Errorf("Expected name 'Test Organization', got '%s'", org.Name)
+		}
 
-	if org.Balance != 1000 {
-		t.Errorf("Expected balance 1000, got %d", org.Balance)
+		if org.Balance != 1000 {
+			t.Errorf("Expected balance 1000, got %d", org.Balance)
+		}
 	}
 }

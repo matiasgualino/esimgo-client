@@ -15,6 +15,8 @@ func main() {
 		log.Fatal("ESIM_GO_API_KEY environment variable is required")
 	}
 
+	log.Println("apiKey", apiKey)
+
 	client := esimgo.NewESIMGoClient(apiKey)
 	ctx := context.Background()
 
@@ -25,8 +27,10 @@ func main() {
 		log.Fatalf("Error: %v", err)
 	}
 
-	fmt.Printf("✅ Organización: %s\n", org.Name)
-	fmt.Printf("💰 Balance: %d %s\n", org.Balance, org.Currency)
+	for _, org := range org.Organizations {
+		fmt.Printf("✅ Organización: %s\n", org.Name)
+		fmt.Printf("💰 Balance: %d %s\n", org.Balance, org.Currency)
+	}
 
 	// Listar algunos bundles del catálogo
 	fmt.Println("\n📦 Listando catálogo de bundles...")
@@ -36,12 +40,12 @@ func main() {
 	if err != nil {
 		log.Printf("Error obteniendo catálogo: %v", err)
 	} else {
-		fmt.Printf("✅ Encontrados %d bundles\n", len(bundles))
-		for i, bundle := range bundles {
+		fmt.Printf("✅ Encontrados %d bundles\n", len(bundles.Bundles))
+		for i, bundle := range bundles.Bundles {
 			if i >= 3 { // Mostrar solo los primeros 3
 				break
 			}
-			fmt.Printf("  - %s: %s (Precio: %d)\n", bundle.Name, bundle.Description, bundle.Price)
+			fmt.Printf("  - %s: %s (Precio: %.2f)\n", bundle.Name, bundle.Description, bundle.Price)
 		}
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/$(git config --get remote.origin.url | sed 's/.*github\.com\///; s/\.git$//')"
+	"github.com/matiasgualino/esimgo-client"
 )
 
 func main() {
@@ -27,27 +27,27 @@ func main() {
 	if err != nil {
 		log.Printf("Error buscando bundles para España: %v", err)
 	} else {
-		fmt.Printf("✅ Encontrados %d bundles para España\n", len(spainBundles))
-		for i, bundle := range spainBundles {
+		fmt.Printf("✅ Encontrados %d bundles para España\n", len(spainBundles.Bundles))
+		for i, bundle := range spainBundles.Bundles {
 			if i >= 3 {
 				break
 			}
-			fmt.Printf("  - %s: %dMB por %d días (€%.2f)\n", 
+			fmt.Printf("  - %s: %dMB por %d días (€%.2f)\n",
 				bundle.Name, bundle.DataAmount, bundle.Duration, float64(bundle.Price)/100)
 		}
 	}
 
 	// Ejemplo: validar una orden
 	fmt.Println("\n💰 Validando una orden...")
-	if len(spainBundles) > 0 {
+	if len(spainBundles.Bundles) > 0 {
 		orderItems := []esimgo.OrderItem{
 			{
 				Type:     esimgo.BundleTypeBundle,
 				Quantity: 1,
-				Item:     spainBundles[0].Name,
+				Item:     spainBundles.Bundles[0].Name,
 			},
 		}
-		
+
 		validation, err := client.Orders.Validate(ctx, orderItems, false)
 		if err != nil {
 			log.Printf("Error validando orden: %v", err)

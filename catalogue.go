@@ -29,7 +29,7 @@ type CatalogueBundle struct {
 	Autostart      bool      `json:"autostart"`
 	Unlimited      bool      `json:"unlimited"`
 	RoamingEnabled []Country `json:"roamingEnabled"`
-	Price          int       `json:"price"`
+	Price          float64   `json:"price"`
 }
 
 // ListCatalogueRequest represents query parameters for listing catalogue bundles
@@ -44,8 +44,12 @@ type ListCatalogueRequest struct {
 	Region      string `json:"region,omitempty"`
 }
 
+type Bundles struct {
+	Bundles []CatalogueBundle `json:"bundles"`
+}
+
 // List retrieves all bundles available in the catalogue
-func (s *CatalogueService) List(ctx context.Context, req *ListCatalogueRequest) ([]CatalogueBundle, error) {
+func (s *CatalogueService) List(ctx context.Context, req *ListCatalogueRequest) (*Bundles, error) {
 	params := url.Values{}
 
 	if req.Page > 0 {
@@ -66,10 +70,10 @@ func (s *CatalogueService) List(ctx context.Context, req *ListCatalogueRequest) 
 		endpoint += "?" + params.Encode()
 	}
 
-	var resp []CatalogueBundle
+	var resp Bundles
 	err := s.client.makeRequest(ctx, "GET", endpoint, nil, &resp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list catalogue: %w", err)
 	}
-	return resp, nil
+	return &resp, nil
 }

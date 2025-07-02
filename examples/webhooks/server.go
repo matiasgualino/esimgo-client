@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/$(git config --get remote.origin.url | sed 's/.*github\.com\///; s/\.git$//')"
+	"github.com/matiasgualino/esimgo-client"
 )
 
 // CallbackData represents callback data structure for usage notifications
@@ -19,11 +19,11 @@ type CallbackData struct {
 func main() {
 	http.HandleFunc("/webhook", handleWebhook)
 	http.HandleFunc("/health", handleHealth)
-	
+
 	fmt.Println("🚀 Webhook server iniciado en :8080")
 	fmt.Println("📡 Endpoint: http://localhost:8080/webhook")
 	fmt.Println("❤️  Health check: http://localhost:8080/health")
-	
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -45,8 +45,8 @@ func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("   ICCID: %s\n", callback.ICCID)
 	fmt.Printf("   Tipo: %s\n", callback.AlertType)
 	fmt.Printf("   Bundle: %s\n", callback.Bundle.Name)
-	fmt.Printf("   Restante: %d/%d\n", 
-		callback.Bundle.RemainingQuantity, 
+	fmt.Printf("   Restante: %d/%d\n",
+		callback.Bundle.RemainingQuantity,
 		callback.Bundle.InitialQuantity)
 
 	// Lógica de negocio basada en el tipo de alerta
@@ -69,7 +69,7 @@ func handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
-		"status": "healthy",
+		"status":  "healthy",
 		"service": "esimgo-webhook-server",
 	})
 }

@@ -39,6 +39,10 @@ type Organization struct {
 	Users              []User    `json:"users"`
 }
 
+type Organizations struct {
+	Organizations []Organization `json:"organisations"`
+}
+
 // User represents a user in the organization
 type User struct {
 	FirstName    string `json:"firstName"`
@@ -50,8 +54,8 @@ type User struct {
 }
 
 // GetDetails retrieves organization details
-func (s *OrganizationService) GetDetails(ctx context.Context) (*Organization, error) {
-	var resp Organization
+func (s *OrganizationService) GetDetails(ctx context.Context) (*Organizations, error) {
+	var resp Organizations
 	err := s.client.makeRequest(ctx, "GET", "/organisation", nil, &resp)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get organization details: %w", err)
